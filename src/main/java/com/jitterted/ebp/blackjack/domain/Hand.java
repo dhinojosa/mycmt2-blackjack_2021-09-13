@@ -56,7 +56,8 @@ public class Hand {
         return hand.value() < value();
     }
 
-    String displayValue() {
+    //TODO:Review
+    public String displayValue() {
         return String.valueOf(value());
     }
 
