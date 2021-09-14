@@ -1,4 +1,6 @@
-package com.jitterted.ebp.blackjack;
+package com.jitterted.ebp.blackjack.adapter.in.console;
+
+import com.jitterted.ebp.blackjack.domain.Hand;
 
 import java.util.stream.Collectors;
 
@@ -9,7 +11,8 @@ public class ConsoleHand {
         return ConsoleCard.display(hand.cards().get(0));
     }
 
-    static String cardsAsString(Hand hand) {
+    //TODO: Lock this up after refactoring
+    public static String cardsAsString(Hand hand) {
         return hand.cards().stream()
                    .map(ConsoleCard::display)
                    .collect(Collectors.joining(

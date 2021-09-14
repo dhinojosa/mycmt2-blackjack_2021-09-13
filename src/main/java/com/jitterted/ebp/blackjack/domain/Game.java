@@ -1,5 +1,6 @@
-package com.jitterted.ebp.blackjack;
+package com.jitterted.ebp.blackjack.domain;
 
+import com.jitterted.ebp.blackjack.adapter.in.console.ConsoleHand;
 import org.fusesource.jansi.Ansi;
 
 import java.util.Scanner;
@@ -7,9 +8,7 @@ import java.util.Scanner;
 import static org.fusesource.jansi.Ansi.ansi;
 
 public class Game {
-
     private final Deck deck;
-
     private final Hand dealerHand = new Hand();
     private final Hand playerHand = new Hand();
     private boolean playerDone;
