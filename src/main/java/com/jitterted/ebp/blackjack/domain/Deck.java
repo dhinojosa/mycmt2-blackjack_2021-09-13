@@ -1,11 +1,12 @@
 package com.jitterted.ebp.blackjack.domain;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class Deck {
-    private final List<Card> cards = new ArrayList<>();
+    protected List<Card> cards = new ArrayList<>();
 
     public Deck() {
         for (Suit suit : Suit.values()) {
@@ -15,6 +16,7 @@ public class Deck {
         }
         Collections.shuffle(cards);
     }
+
 
     public int size() {
         return cards.size();
