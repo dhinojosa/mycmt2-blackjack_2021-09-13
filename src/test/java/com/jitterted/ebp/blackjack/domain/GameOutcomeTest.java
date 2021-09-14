@@ -18,6 +18,19 @@ public class GameOutcomeTest {
         Game game = new Game(stubDeck);
         game.initialDeal();
         game.playerHits();
-        assertThat(game.determineOutcome()).isEqualTo("You Busted, so you lose. 💸");
+        assertThat(game.determineOutcome()).isEqualTo(GameOutcome.PLAYER_BUSTS);
+    }
+
+    @Test
+    public void playerBeatsDealer() {
+        Deck stubDeck = new StubDeck(new Card(Suit.HEARTS, Rank.TEN), //Player's First Card
+                                     new Card(Suit.SPADES, Rank.EIGHT), //Dealer's First Card
+                                     new Card(Suit.DIAMONDS, Rank.KING), //Player's Second Card
+                                     new Card(Suit.CLUBS, Rank.KING)); //Dealer's Second Card
+        Game game = new Game(stubDeck);
+        game.initialDeal();
+        game.playerStands();
+        game.dealerTurn();
+        assertThat(game.determineOutcome()).isEqualTo(GameOutcome.PLAYER_BEATS_DEALER);
     }
 }

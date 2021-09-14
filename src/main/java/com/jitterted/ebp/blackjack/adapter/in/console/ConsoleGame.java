@@ -16,7 +16,7 @@ public class ConsoleGame {
     }
 
     public void printOutcome() {
-        System.out.println(game.determineOutcome());
+        System.out.println(game.determineOutcome().displayString());
     }
 
     public static void resetScreen() {
