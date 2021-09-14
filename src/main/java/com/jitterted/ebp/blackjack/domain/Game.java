@@ -17,6 +17,7 @@ public class Game {
     public void initialDeal() {
         dealRoundOfCards();
         dealRoundOfCards();
+
     }
 
     private void dealRoundOfCards() {
@@ -30,6 +31,8 @@ public class Game {
             return GameOutcome.PLAYER_BUSTS;
         } else if (dealerHand.isBusted()) {
             return GameOutcome.DEALER_BUSTS;
+        } else if (playerHand.isBlackjack()) {
+            return GameOutcome.BLACKJACK;
         } else if (playerHand.beats(dealerHand)) {
             return GameOutcome.PLAYER_BEATS_DEALER;
         } else if (playerHand.pushes(dealerHand)) {
@@ -61,6 +64,7 @@ public class Game {
     }
 
     public void playerHits() {
+        if (playerHand.isBlackjack()) throw new IllegalStateException("You're new here, aren't you?");
         playerHand.drawFrom(deck);
         playerDone = playerHand.isBusted();
     }
