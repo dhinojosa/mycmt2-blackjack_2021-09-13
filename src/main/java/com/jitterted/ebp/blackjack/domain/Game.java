@@ -21,7 +21,7 @@ public class Game {
         dealerHand.drawFrom(deck);
     }
 
-    public String gameOutcome() {
+    public String determineOutcome() {
         if (playerHand.isBusted()) {
             return "You Busted, so you lose. 💸";
         } else if (dealerHand.isBusted()) {
