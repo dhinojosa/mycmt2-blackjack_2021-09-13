@@ -4,6 +4,7 @@ import com.jitterted.ebp.blackjack.domain.Game;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.ui.Model;
 
 @Controller
 public class BlackjackController {
@@ -21,7 +22,8 @@ public class BlackjackController {
     }
 
     @GetMapping("/game")
-    public String getGame() {
+    public String getGame(Model model) {
+        model.addAttribute("gameView", GameView.of(game));
         return "blackjack";
     }
 }
