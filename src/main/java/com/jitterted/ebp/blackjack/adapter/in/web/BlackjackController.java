@@ -6,24 +6,33 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.ui.Model;
 
+import java.util.function.Supplier;
+
 @Controller
 public class BlackjackController {
 
-    private final Game game;
+    private final Supplier<Game> gameSupplier;
+    private Game currentGame;
 
-    public BlackjackController(Game game) {
-        this.game = game;
+    //interface GameService {
+    //   public UUID getNewGame();
+    //   public Game loadGame(UUID);
+    //
+    //}
+    public BlackjackController(Supplier<Game> gameSupplier) {
+        this.gameSupplier = gameSupplier;
     }
 
     @PostMapping("/start-game")
     public String startGame() {
-        game.initialDeal();
+        this.currentGame = gameSupplier.get();
+        currentGame.initialDeal();
         return "redirect:/game";
     }
 
     @GetMapping("/game")
     public String getGame(Model model) {
-        model.addAttribute("gameView", GameView.of(game));
+        model.addAttribute("gameView", GameView.of(currentGame));
         return "blackjack";
     }
 }

@@ -19,7 +19,7 @@ public class BlackjackControllerTest {
     @Test
     void startGamePlayerHasCardsInHand() {
         Game game = new Game();
-        BlackjackController blackjackController = new BlackjackController(game);
+        BlackjackController blackjackController = new BlackjackController(() -> game);
         String result = blackjackController.startGame();
         assertThat(result).isEqualTo("redirect:/game");
         assertThat(game.playerHand().cards()).hasSize(2);
@@ -33,7 +33,7 @@ public class BlackjackControllerTest {
                 new Card(Suit.DIAMONDS, Rank.FIVE),
                 new Card(Suit.CLUBS, Rank.FIVE)
         ));
-        BlackjackController blackjackController = new BlackjackController(game);
+        BlackjackController blackjackController = new BlackjackController(() -> game);
         blackjackController.startGame(); //needed the cards dealt
 
         Model concurrentModel = new ConcurrentModel();
@@ -52,7 +52,7 @@ public class BlackjackControllerTest {
                 new Card(Suit.DIAMONDS, Rank.FIVE),
                 new Card(Suit.CLUBS, Rank.FIVE)
         ));
-        BlackjackController blackjackController = new BlackjackController(game);
+        BlackjackController blackjackController = new BlackjackController(() -> game);
         blackjackController.startGame(); //needed the cards dealt
 
         Model concurrentModel = new ConcurrentModel();

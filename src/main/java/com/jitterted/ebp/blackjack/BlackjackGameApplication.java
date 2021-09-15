@@ -5,6 +5,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.util.function.Supplier;
+
 @SpringBootApplication
 public class BlackjackGameApplication {
 
@@ -13,7 +15,7 @@ public class BlackjackGameApplication {
     }
 
     @Bean
-    public Game getGame() {
-        return new Game();
+    public Supplier<Game> getGame() {
+        return Game::new;
     }
 }
