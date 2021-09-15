@@ -35,4 +35,19 @@ public class WebIntegrationTest {
                .andExpect(status().isOk())
                .andExpect(model().attributeExists("gameView"));
     }
+
+    @Test
+    void testGetDoneReturn200Ok() throws Exception {
+        mockMvc.perform(post("/start-game"));
+        mockMvc.perform(get("/done"))
+               .andExpect(status().isOk())
+               .andExpect(model().attributeExists("gameView"))
+               .andExpect(model().attributeExists("outcome"));
+    }
+
+    @Test
+    void testPostHitReturns200Ok() throws Exception {
+        mockMvc.perform(post("/hit"))
+               .andExpect(status().is3xxRedirection());
+    }
 }

@@ -2,6 +2,7 @@ package com.jitterted.ebp.blackjack.adapter.in.web;
 
 import com.jitterted.ebp.blackjack.domain.Card;
 import com.jitterted.ebp.blackjack.domain.Game;
+import com.jitterted.ebp.blackjack.domain.GameOutcome;
 import com.jitterted.ebp.blackjack.domain.Rank;
 import com.jitterted.ebp.blackjack.domain.StubDeck;
 import com.jitterted.ebp.blackjack.domain.Suit;
@@ -61,5 +62,58 @@ public class BlackjackControllerTest {
 
         assertThat(gameView.getDealerCards()).containsExactly("10♠", "5♣");
         assertThat(result).isEqualTo("blackjack");
+    }
+
+
+    @Test
+    void testHitCommandPlayerGoesBust() {
+        Game game = new Game(new StubDeck(
+                new Card(Suit.CLUBS, Rank.TEN), //player
+                new Card(Suit.SPADES, Rank.TEN), //dealer
+                new Card(Suit.DIAMONDS, Rank.EIGHT), //player
+                new Card(Suit.CLUBS, Rank.SEVEN), //dealer
+                new Card(Suit.HEARTS, Rank.NINE) //player
+                ));
+        BlackjackController blackjackController = new BlackjackController(() -> game);
+        blackjackController.startGame(); //needed the cards dealt
+        String result = blackjackController.hitCommand();
+        assertThat(result).isEqualTo("redirect:/done");
+    }
+
+    @Test
+    void testDoneWithAttributesAfterBust() {
+        Game game = new Game(new StubDeck(
+                new Card(Suit.CLUBS, Rank.TEN), //player
+                new Card(Suit.SPADES, Rank.TEN), //dealer
+                new Card(Suit.DIAMONDS, Rank.EIGHT), //player
+                new Card(Suit.CLUBS, Rank.SEVEN), //dealer
+                new Card(Suit.HEARTS, Rank.NINE) //player
+        ));
+        BlackjackController blackjackController = new BlackjackController(() -> game);
+        blackjackController.startGame();
+        blackjackController.hitCommand();
+        Model concurrentModel = new ConcurrentModel();
+        String result = blackjackController.getDone(concurrentModel);
+        GameView gameView = (GameView) concurrentModel.getAttribute("gameView");
+        String outcome = (String) concurrentModel.getAttribute("outcome");
+        assertThat(gameView.getPlayerCards()).containsExactly("10♣", "8♦", "9♥");
+        assertThat(gameView.getDealerCards()).containsExactly("10♠", "7♣");
+        assertThat(result).isEqualTo("done");
+        assertThat(outcome).isEqualTo("PLAYER_BUSTS");
+    }
+
+    @Test
+    void testHitCommandPlayerDoesNotGoBust() {
+        Game game = new Game(new StubDeck(
+                new Card(Suit.CLUBS, Rank.TEN), //player
+                new Card(Suit.SPADES, Rank.TEN), //dealer
+                new Card(Suit.DIAMONDS, Rank.EIGHT), //player
+                new Card(Suit.CLUBS, Rank.SEVEN), //dealer
+                new Card(Suit.HEARTS, Rank.THREE) //player
+        ));
+        BlackjackController blackjackController = new BlackjackController(() -> game);
+        blackjackController.startGame(); //needed the cards dealt
+        String result = blackjackController.hitCommand();
+        assertThat(result).isEqualTo("redirect:/game");
     }
 }
