@@ -1,22 +1,13 @@
 package com.jitterted.ebp.blackjack.adapter.in.web;
 
-import com.jitterted.ebp.blackjack.domain.Card;
-import com.jitterted.ebp.blackjack.domain.Game;
-import com.jitterted.ebp.blackjack.domain.GameOutcome;
-import com.jitterted.ebp.blackjack.domain.Rank;
-import com.jitterted.ebp.blackjack.domain.StubDeck;
-import com.jitterted.ebp.blackjack.domain.Suit;
+import com.jitterted.ebp.blackjack.domain.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class BlackjackControllerTest {
-    private String heartsString = Suit.HEARTS.symbol();
-    private String clubString = Suit.CLUBS.symbol();
     @Test
     void startGamePlayerHasCardsInHand() {
         Game game = new Game();
@@ -38,7 +29,7 @@ public class BlackjackControllerTest {
         blackjackController.startGame(); //needed the cards dealt
 
         Model concurrentModel = new ConcurrentModel();
-        String result  = blackjackController.getGame(concurrentModel);
+        String result = blackjackController.getGame(concurrentModel);
         GameView gameView = (GameView) concurrentModel.getAttribute("gameView");
 
         assertThat(gameView.getPlayerCards()).containsExactly("2♣", "5♦");
@@ -57,13 +48,12 @@ public class BlackjackControllerTest {
         blackjackController.startGame(); //needed the cards dealt
 
         Model concurrentModel = new ConcurrentModel();
-        String result  = blackjackController.getGame(concurrentModel);
+        String result = blackjackController.getGame(concurrentModel);
         GameView gameView = (GameView) concurrentModel.getAttribute("gameView");
 
         assertThat(gameView.getDealerCards()).containsExactly("10♠", "5♣");
         assertThat(result).isEqualTo("blackjack");
     }
-
 
     @Test
     void testHitCommandPlayerGoesBust() {
@@ -73,7 +63,7 @@ public class BlackjackControllerTest {
                 new Card(Suit.DIAMONDS, Rank.EIGHT), //player
                 new Card(Suit.CLUBS, Rank.SEVEN), //dealer
                 new Card(Suit.HEARTS, Rank.NINE) //player
-                ));
+        ));
         BlackjackController blackjackController = new BlackjackController(() -> game);
         blackjackController.startGame(); //needed the cards dealt
         String result = blackjackController.hitCommand();
@@ -100,6 +90,24 @@ public class BlackjackControllerTest {
         assertThat(gameView.getDealerCards()).containsExactly("10♠", "7♣");
         assertThat(result).isEqualTo("done");
         assertThat(outcome).isEqualTo("PLAYER_BUSTS");
+    }
+
+    @Test
+    void testGameWithAttributes() {
+        Game game = new Game(new StubDeck(
+                new Card(Suit.CLUBS, Rank.TEN), //player
+                new Card(Suit.SPADES, Rank.TEN), //dealer
+                new Card(Suit.DIAMONDS, Rank.EIGHT), //player
+                new Card(Suit.CLUBS, Rank.SEVEN) //dealer
+        ));
+        BlackjackController blackjackController = new BlackjackController(() -> game);
+        blackjackController.startGame();
+        Model concurrentModel = new ConcurrentModel();
+        String result = blackjackController.getGame(concurrentModel);
+        GameView gameView = (GameView) concurrentModel.getAttribute("gameView");
+        assertThat(gameView.getPlayerCards()).containsExactly("10♣", "8♦");
+        assertThat(gameView.getDealerCards()).containsExactly("10♠", "7♣");
+        assertThat(result).isEqualTo("blackjack");
     }
 
     @Test
