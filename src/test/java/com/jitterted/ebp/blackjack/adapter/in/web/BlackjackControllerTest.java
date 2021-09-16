@@ -124,4 +124,36 @@ public class BlackjackControllerTest {
         String result = blackjackController.hitCommand();
         assertThat(result).isEqualTo("redirect:/game");
     }
+
+    @Test
+    void testStandCommand() {
+        Game game = new Game(new StubDeck(
+                new Card(Suit.CLUBS, Rank.TEN), //player
+                new Card(Suit.SPADES, Rank.TEN), //dealer
+                new Card(Suit.DIAMONDS, Rank.EIGHT), //player
+                new Card(Suit.CLUBS, Rank.SEVEN) //dealer
+        ));
+        BlackjackController blackjackController = new BlackjackController(() -> game);
+        blackjackController.startGame(); //needed the cards dealt
+        String result = blackjackController.standCommand();
+        assertThat(game.isPlayerDone()).isTrue();
+        assertThat(result).isEqualTo("redirect:/done");
+    }
+
+    @Test
+    void testPlayerHitsThenStandsAndLosesCommand() {
+        Game game = new Game(new StubDeck(
+                new Card(Suit.CLUBS, Rank.TEN), //player
+                new Card(Suit.SPADES, Rank.TEN), //dealer
+                new Card(Suit.DIAMONDS, Rank.EIGHT), //player
+                new Card(Suit.CLUBS, Rank.FOUR), //dealer
+                new Card(Suit.CLUBS, Rank.SEVEN) //dealer
+        ));
+        BlackjackController blackjackController = new BlackjackController(() -> game);
+        blackjackController.startGame(); //needed the cards dealt
+        String result = blackjackController.standCommand();
+        assertThat(game.isPlayerDone()).isTrue();
+        assertThat(game.dealerHand().cards()).hasSize(3);
+        assertThat(result).isEqualTo("redirect:/done");
+    }
 }

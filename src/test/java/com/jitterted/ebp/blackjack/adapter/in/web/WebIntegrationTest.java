@@ -31,6 +31,7 @@ public class WebIntegrationTest {
 
     @Test
     void testGetGameReturn200Ok() throws Exception {
+        mockMvc.perform(post("/start-game"));
         mockMvc.perform(get("/game"))
                .andExpect(status().isOk())
                .andExpect(model().attributeExists("gameView"));
@@ -47,7 +48,17 @@ public class WebIntegrationTest {
 
     @Test
     void testPostHitReturns200Ok() throws Exception {
+        mockMvc.perform(post("/start-game"));
         mockMvc.perform(post("/hit"))
                .andExpect(status().is3xxRedirection());
     }
+
+    @Test
+    void testPostStandReturns200Ok() throws Exception {
+        mockMvc.perform(post("/start-game"));
+        mockMvc.perform(post("/stand"))
+               .andExpect(status().is3xxRedirection())
+               .andExpect(redirectedUrl("/done"));
+    }
+
 }

@@ -2,9 +2,9 @@ package com.jitterted.ebp.blackjack.adapter.in.web;
 
 import com.jitterted.ebp.blackjack.domain.Game;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.ui.Model;
 
 import java.util.function.Supplier;
 
@@ -54,5 +54,12 @@ public class BlackjackController {
             return "redirect:/done";
         }
         return "redirect:/game";
+    }
+
+    @PostMapping("/stand")
+    public String standCommand() {
+        currentGame.playerStands();
+        currentGame.dealerTurn();
+        return "redirect:/done";
     }
 }
