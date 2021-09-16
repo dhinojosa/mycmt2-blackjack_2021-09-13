@@ -29,7 +29,10 @@ public class Game {
     public void initialDeal() {
         dealRoundOfCards();
         dealRoundOfCards();
-
+        if (playerHand.isBlackjack()) {
+            this.playerDone = true;
+            gameMonitor.roundCompleted(this);
+        }
     }
 
     private void dealRoundOfCards() {
@@ -61,6 +64,7 @@ public class Game {
                 dealerHand.drawFrom(deck);
             }
         }
+        gameMonitor.roundCompleted(this);
     }
 
     public Hand dealerHand() {
@@ -79,6 +83,9 @@ public class Game {
         if (playerHand.isBlackjack()) throw new IllegalStateException("You're new here, aren't you?");
         playerHand.drawFrom(deck);
         playerDone = playerHand.isBusted();
+        if (playerDone) {
+            gameMonitor.roundCompleted(this);
+        }
     }
 
     public boolean isPlayerDone() {
